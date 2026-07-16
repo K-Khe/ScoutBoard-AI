@@ -1,0 +1,17 @@
+Epic,File,Scope,Dependency,Status,Task Count,Notes
+00 Foundation,00-foundation.csv,Foundation,,Done,10,Project bootstrapping and base conventions
+01 Shared Architecture,01-shared-architecture.csv,Architecture,00-foundation.csv,Done,12,Reusable service state and UI architecture
+02 Dashboard,02-dashboard.csv,Core Screen,01-shared-architecture.csv,Done,12,Overview home and workflow entrypoint
+03 Connect Data,03-connect-data.csv,Data Input,01-shared-architecture.csv,Done,12,Import and connector workflow
+04 Product Finder,04-product-finder.csv,Discovery,03-connect-data.csv,Done,16,Discovery and search flow
+05 Radar Setup,05-radar-setup.csv,Signal Setup,04-product-finder.csv,Done,12,Radar configuration and preview
+06 Content Tracker,06-content-tracker.csv,Content Intelligence,05-radar-setup.csv,Done,14,Content monitoring and analysis
+07 Content Planner,07-content-planner.csv,Content Intelligence,06-content-tracker.csv,Done,14,Content planning and workflow
+08 Market Density,08-market-density.csv,Market Intelligence,07-content-planner.csv,Done,14,Market comparison and opportunity scoring
+09 Product Insight,09-product-insight.csv,Core Analysis,08-market-density.csv,Done,15,Unified insight workspace
+10 Saved Products,10-saved-products.csv,Decision Management,09-product-insight.csv,Done,15,Saved decision management
+11 Ad Angles,11-ad-angles.csv,Marketing Intelligence,10-saved-products.csv,Done,14,Ad angle generation and comparison
+12 Signal Sources,12-signal-sources.csv,Data Attribution,11-ad-angles.csv,Done,14,Signal transparency and source quality
+13 Outreach,13-outreach.csv,Execution Workflow,12-signal-sources.csv,Done,14,Outreach and campaign execution
+14 Reports,14-reports.csv,Reporting & Export,13-outreach.csv,Done,16,Final reporting and exports
+15 Release QA,15-release-qa.csv,Release QA,14-reports.csv,Done,18,Production readiness gate

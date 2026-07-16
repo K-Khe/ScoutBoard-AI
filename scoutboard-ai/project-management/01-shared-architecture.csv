@@ -1,0 +1,13 @@
+ID,Epic,Component,Task,Priority,Status,Assignee,Estimate,Dependency,Labels,Acceptance Criteria,Definition of Done
+ARC-001,Shared Architecture,Mock API,Create mock API layer foundation,P0,Todo,,5,FND-006,"architecture,mock-api,frontend","Application can request mock data through API layer","Mock API layer created and separated from components"
+ARC-002,Shared Architecture,Mock API,Implement success loading error timeout states,P0,Todo,,5,ARC-001,"mock-api,error-state,loading","API simulation supports all response states","Mock API supports success/loading/error/timeout scenarios"
+ARC-003,Shared Architecture,Service Layer,Create service abstraction layer,P0,Todo,,5,ARC-001,"architecture,service","Components consume services instead of direct data","Service modules created per domain"
+ARC-004,Shared Architecture,Types,Create shared TypeScript models,P0,Todo,,3,FND-003,"typescript,types","Common entities have reusable types","Shared interfaces and types created"
+ARC-005,Shared Architecture,State Management,Install and configure Zustand,P1,Todo,,3,FND-007,"state,zustand","Global state can be accessed by features","Zustand configured and documented"
+ARC-006,Shared Architecture,State Management,Create application stores,P1,Todo,,5,ARC-005,"state,zustand","Shared states are separated by domain","Stores created for UI/preferences/data states"
+ARC-007,Shared Architecture,Data Fetching,Create mock query hooks,P1,Todo,,5,ARC-003,"hooks,data-layer","Features can retrieve data through hooks","Reusable data hooks created"
+ARC-008,Shared Architecture,Components,Create shared UI component structure,P1,Todo,,5,FND-006,"component,ui","Shared components follow standard structure","Reusable component folders created"
+ARC-009,Shared Architecture,Error Handling,Create global frontend error handling pattern,P1,Todo,,3,ARC-002,"error-state,frontend","Errors have consistent handling","Error pattern documented and implemented"
+ARC-010,Shared Architecture,Constants,Create shared constants configuration,P2,Todo,,2,FND-006,"architecture,config","Repeated values are centralized","Constants separated from components"
+ARC-011,Shared Architecture,Validation,Add schema validation foundation with Zod,P1,Todo,,3,FND-007,"forms,zod,validation","Data validation utilities available","Zod schemas can be reused"
+ARC-012,Shared Architecture,Documentation,Document architecture rules,P2,Todo,,2,ARC-001,"documentation,architecture","Team understands structure rules","Architecture guideline documented"

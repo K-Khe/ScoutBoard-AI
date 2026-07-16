@@ -1,0 +1,13 @@
+ID,Epic,Component,Task,Priority,Status,Assignee,Estimate,Dependency,Labels,Acceptance Criteria,Definition of Done
+DATA-001,Connect Data,Page Layout,Create connect data page structure,P0,Todo,,3,DASH-001,"frontend,connect-data,component","Page renders with standard layout","Page structure completed"
+DATA-002,Connect Data,Service,Create data connection service,P0,Todo,,3,ARC-003,"service,mock-api,connect-data","Service returns mock connection data","Service layer implemented"
+DATA-003,Connect Data,CSV Upload,Create CSV upload component,P0,Todo,,5,ARC-008,"forms,upload,component","User can select CSV file","Upload UI completed"
+DATA-004,Connect Data,Validation,Validate uploaded file with Zod,P1,Todo,,3,ARC-011,"forms,zod,validation","Invalid files are rejected","Validation schema implemented"
+DATA-005,Connect Data,Import Flow,Create import progress state,P1,Todo,,3,ARC-006,"state,zustand,loading","Import progress updates correctly","Import state separated from UI"
+DATA-006,Connect Data,Connector UI,Create connector status cards,P1,Todo,,3,ARC-008,"component,ui,card","Connection status displayed","Reusable status component completed"
+DATA-007,Connect Data,Dataset List,Create local dataset list UI,P1,Todo,,5,ARC-003,"table,dataset","Datasets displayed correctly","Dataset table completed"
+DATA-008,Connect Data,Loading,Implement loading states,P1,Todo,,2,ARC-002,"loading,skeleton","Loading state appears during fetch","Skeleton completed"
+DATA-009,Connect Data,Error,Implement import error states,P1,Todo,,2,ARC-009,"error-state","Import failures are handled","Error UI completed"
+DATA-010,Connect Data,Empty State,Implement no dataset state,P1,Todo,,2,ARC-009,"empty-state","Empty dataset screen displayed","Empty state completed"
+DATA-011,Connect Data,Responsive,Optimize mobile layout,P2,Todo,,3,DASH-010,"responsive","Works on all screen sizes","Responsive verified"
+DATA-012,Connect Data,QA,Run connect data smoke test,P1,Todo,,2,DATA-011,"qa","Main flow verified","QA completed"

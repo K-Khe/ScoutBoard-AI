@@ -1,0 +1,11 @@
+ID,Epic,Component,Task,Priority,Status,Assignee,Estimate,Dependency,Labels,Acceptance Criteria,Definition of Done
+FND-001,Foundation,Framework,Upgrade Next.js to version 15,P0,Todo,,5,,"frontend,nextjs,upgrade","Project runs successfully with Next.js 15","Next.js 15 installed; dev and build pass"
+FND-002,Foundation,Framework,Upgrade React to version 19,P0,Todo,,3,FND-001,"frontend,react,upgrade","Application runs with React 19","React version updated and no runtime issues"
+FND-003,Foundation,TypeScript,Update TypeScript configuration,P0,Todo,,3,FND-002,"frontend,typescript,types","Type checking works correctly","No TypeScript errors"
+FND-004,Foundation,ESLint,Update ESLint configuration,P0,Todo,,2,FND-002,"frontend,eslint,quality","Lint command runs successfully","npm run lint passes"
+FND-005,Foundation,Styling,Validate Tailwind CSS configuration,P1,Todo,,2,FND-001,"frontend,tailwind,ui","Existing styles compile correctly","Tailwind build works without warnings"
+FND-006,Foundation,Project Structure,Create feature-based folder structure,P0,Todo,,5,FND-003,"architecture,frontend","Required folders exist","features hooks services types lib structure created"
+FND-007,Foundation,Dependencies,Cleanup and standardize package dependencies,P1,Todo,,3,FND-002,"frontend,dependencies","Unused packages removed","package.json is clean and documented"
+FND-008,Foundation,Development,Setup formatting and code conventions,P1,Todo,,2,FND-004,"frontend,quality","Formatting rules apply consistently","Formatting configuration completed"
+FND-009,Foundation,Environment,Create environment configuration template,P1,Todo,,2,FND-006,"frontend,config","Environment variables documented","Example env file exists"
+FND-010,Foundation,Quality,Create initial validation checklist,P2,Todo,,1,FND-008,"qa","Team can verify setup","Foundation verification checklist completed"

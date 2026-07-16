@@ -1,0 +1,13 @@
+ID,Epic,Component,Task,Priority,Status,Assignee,Estimate,Dependency,Labels,Acceptance Criteria,Definition of Done
+RADAR-001,Radar Setup,Page Layout,Create radar setup page structure,P0,Todo,,3,PROD-001,"frontend,radar,component","Radar page renders correctly","Page structure completed"
+RADAR-002,Radar Setup,Service,Create radar configuration service,P0,Todo,,5,ARC-003,"service,mock-api","Radar data loads through service layer","Service completed"
+RADAR-003,Radar Setup,Types,Create radar configuration types,P0,Todo,,3,ARC-004,"typescript,types","Radar models are typed","Types completed"
+RADAR-004,Radar Setup,Form,Create radar configuration form,P0,Todo,,5,ARC-011,"forms,zod","User can configure radar rules","Form validation completed"
+RADAR-005,Radar Setup,Rules,Create filter rule builder,P1,Todo,,5,RADAR-004,"forms,component","Rules can be added and edited","Rule builder completed"
+RADAR-006,Radar Setup,State,Create radar Zustand store,P1,Todo,,3,ARC-006,"state,zustand","Radar state persists correctly","Store completed"
+RADAR-007,Radar Setup,Preview,Create signal preview panel,P1,Todo,,5,RADAR-002,"ui,signal","Matching products previewed","Preview completed"
+RADAR-008,Radar Setup,Status,Create radar status management,P1,Todo,,3,RADAR-002,"component,status","Radar enable/disable works","Status flow completed"
+RADAR-009,Radar Setup,Loading,Implement loading states,P1,Todo,,2,ARC-002,"loading,skeleton","Loading handled","Skeleton completed"
+RADAR-010,Radar Setup,Error,Implement error handling,P1,Todo,,2,ARC-009,"error-state","Errors displayed correctly","Error state completed"
+RADAR-011,Radar Setup,Responsive,Optimize responsive layout,P2,Todo,,3,RADAR-001,"responsive","Mobile layout works","Responsive verified"
+RADAR-012,Radar Setup,QA,Run radar setup smoke test,P1,Todo,,2,RADAR-011,"qa","Radar flow verified","QA completed"

@@ -1,0 +1,14 @@
+ID,Task,Priority,Dependency,Estimate,Definition of Done
+SPT-001,Create shared platform folder structure,P0,FND-014,2h,Feature folders and shared layers exist for app components hooks stores services and schemas
+SPT-002,Create mock API foundation,P0,FND-014,4h,Mock API responses and fixtures are available for shared development
+SPT-003,Define API response contracts,P0,SPT-002,2h,Success error and pagination response shapes are typed and documented
+SPT-004,Create base service client,P0,SPT-003,3h,Shared service helpers support get post put delete and normalized errors
+SPT-005,Set up Zustand store patterns,P0,SPT-004,3h,Reusable store factories and slice patterns are available
+SPT-006,Create reusable data fetch hooks,P1,SPT-004,3h,Shared hooks handle loading error and refresh flows consistently
+SPT-007,Build shared UI primitives,P1,FND-007,4h,Reusable card table badge skeleton and empty-state building blocks are ready
+SPT-008,Implement form helpers and Zod resolver,P1,FND-007,3h,Shared form field wrappers and validation helpers are ready
+SPT-009,Implement chart wrappers,P1,FND-008,3h,Reusable chart container tooltip legend and empty-state wrappers are ready
+SPT-010,Create error handling utilities,P1,SPT-004,2h,Centralized error parsing retry and notification helpers are available
+SPT-011,Add constants and type registry,P1,SPT-003,2h,Shared enums labels and API constants live in the common registry
+SPT-012,Add loading and skeleton system,P1,SPT-007,2h,Consistent loading states and skeleton patterns are available
+SPT-013,Verify shared platform smoke test,P1,SPT-012,2h,Shared platform imports and renders without runtime errors
