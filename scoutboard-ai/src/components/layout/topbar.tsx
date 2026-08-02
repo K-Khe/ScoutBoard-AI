@@ -11,6 +11,9 @@ import {
   User,
   CreditCard,
   Bell,
+  Loader2,
+  FileSpreadsheet,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -31,6 +34,46 @@ import { Badge } from "@/components/ui/badge";
 export function Topbar() {
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [lang, setLang] = React.useState<"TH" | "EN">("TH");
+  const [exportingCSV, setExportingCSV] = React.useState(false);
+  const [exportingPDF, setExportingPDF] = React.useState(false);
+
+  async function handleExportCSV() {
+    setExportingCSV(true);
+    try {
+      const { exportProductsCSV } = await import("@/lib/export-utils");
+      const { products: mockProducts } = await import("@/lib/mock-data");
+      let products = mockProducts;
+      try {
+        const raw = localStorage.getItem("scoutboard:products:v1");
+        if (raw) products = JSON.parse(raw);
+      } catch { /* ignore */ }
+      exportProductsCSV(products);
+      toast.success("ส่งออก CSV สำเร็จ", { description: `${products.length} รายการ` });
+    } catch {
+      toast.error("ส่งออกไม่สำเร็จ");
+    } finally {
+      setExportingCSV(false);
+    }
+  }
+
+  async function handleExportPDF() {
+    setExportingPDF(true);
+    try {
+      const { exportProductsPDF } = await import("@/lib/export-utils");
+      const { products: mockProducts } = await import("@/lib/mock-data");
+      let products = mockProducts;
+      try {
+        const raw = localStorage.getItem("scoutboard:products:v1");
+        if (raw) products = JSON.parse(raw);
+      } catch { /* ignore */ }
+      await exportProductsPDF(products);
+      toast.success("สร้าง PDF สำเร็จ", { description: `${products.length} รายการ` });
+    } catch {
+      toast.error("สร้าง PDF ไม่สำเร็จ");
+    } finally {
+      setExportingPDF(false);
+    }
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6">
@@ -92,11 +135,27 @@ export function Topbar() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>ส่งออกข้อมูลปัจจุบัน</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => toast.success("กำลังสร้างไฟล์ CSV", { description: "ระบบจะแจ้งเตือนเมื่อพร้อมดาวน์โหลด" })}>
-              ส่งออกเป็น CSV
+            <DropdownMenuItem
+              onClick={handleExportCSV}
+              disabled={exportingCSV || exportingPDF}
+            >
+              {exportingCSV ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileSpreadsheet className="h-4 w-4" />
+              )}
+              {exportingCSV ? "กำลังสร้าง CSV..." : "ส่งออกเป็น CSV"}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => toast.success("กำลังสร้างไฟล์ PDF", { description: "ระบบจะแจ้งเตือนเมื่อพร้อมดาวน์โหลด" })}>
-              ส่งออกเป็น PDF
+            <DropdownMenuItem
+              onClick={handleExportPDF}
+              disabled={exportingCSV || exportingPDF}
+            >
+              {exportingPDF ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileText className="h-4 w-4" />
+              )}
+              {exportingPDF ? "กำลังสร้าง PDF..." : "ส่งออกเป็น PDF"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

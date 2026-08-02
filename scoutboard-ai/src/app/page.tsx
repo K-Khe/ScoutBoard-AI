@@ -3,7 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { UploadCloud, Radar, Sparkles, Bookmark, Rss, TrendingUp, ArrowRight, ScanSearch, Files, WandSparkles } from "lucide-react";
+import { UploadCloud, Radar, Sparkles, Bookmark, Rss, TrendingUp, ArrowRight, ScanSearch, Files, WandSparkles, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +13,8 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { ProductCard } from "@/components/dashboard/product-card";
 import { ScanLoader } from "@/components/dashboard/scan-loader";
 import { UploadDialog } from "@/components/dashboard/upload-dialog";
-import { products, signalSources, contentTracker, overviewStats } from "@/lib/mock-data";
+import { signalSources, contentTracker, overviewStats } from "@/lib/mock-data";
+import { useProductStore } from "@/lib/use-product-store";
 import { formatNumber } from "@/lib/utils";
 
 const workflow = [
@@ -44,8 +45,18 @@ const workflow = [
 ];
 
 export default function OverviewPage() {
+  const { products, isImported, meta, toggleSaveProduct } = useProductStore();
   const [scanning, setScanning] = React.useState(false);
   const [scanned, setScanned] = React.useState(false);
+
+  // Derive live stats from actual product data
+  const highOpportunity = products.filter((p) => p.score === "สูง").length;
+  const displayStats = {
+    scannedToday: isImported ? products.length : overviewStats.scannedToday,
+    newOpportunities: isImported ? highOpportunity : overviewStats.newOpportunities,
+    activeSignals: overviewStats.activeSignals,
+    savedProducts: overviewStats.savedProducts,
+  };
 
   function runScan() {
     setScanning(true);
@@ -122,10 +133,24 @@ export default function OverviewPage() {
       </Card>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="สแกนวันนี้" value={formatNumber(overviewStats.scannedToday)} delta="+12.4% จากเมื่อวาน" icon={Radar} index={0} tone="signal" />
-        <StatCard label="โอกาสสินค้าใหม่" value={String(overviewStats.newOpportunities)} delta="+8 รายการ" icon={Sparkles} index={1} tone="teal" />
-        <StatCard label="แหล่งสัญญาณที่ใช้งาน" value={String(overviewStats.activeSignals)} icon={Rss} index={2} />
-        <StatCard label="สินค้าที่บันทึกไว้" value={String(overviewStats.savedProducts)} icon={Bookmark} index={3} />
+        <StatCard
+          label={isImported ? "สินค้าในคลัง" : "สแกนวันนี้"}
+          value={formatNumber(displayStats.scannedToday)}
+          delta={isImported ? `จาก ${meta?.fileName ?? "CSV"}` : "+12.4% จากเมื่อวาน"}
+          icon={Radar}
+          index={0}
+          tone="signal"
+        />
+        <StatCard
+          label="โอกาสสินค้าสูง"
+          value={String(displayStats.newOpportunities)}
+          delta={isImported ? `จาก ${products.length} รายการ` : "+8 รายการ"}
+          icon={Sparkles}
+          index={1}
+          tone="teal"
+        />
+        <StatCard label="แหล่งสัญญาณที่ใช้งาน" value={String(displayStats.activeSignals)} icon={Rss} index={2} />
+        <StatCard label="สินค้าที่บันทึกไว้" value={String(displayStats.savedProducts)} icon={Bookmark} index={3} />
       </div>
 
       {scanning && <ScanLoader label="กำลังอ่านข้อมูล Shopee Feed" hint="ระบบกำลังตรวจสอบว่ามีข้อมูลใหม่เข้ามาหรือไม่" />}
@@ -138,11 +163,22 @@ export default function OverviewPage() {
               <TabsTrigger value="signals">แหล่งสัญญาณล่าสุด</TabsTrigger>
               <TabsTrigger value="content">คอนเทนต์ที่ถูกพูดถึง</TabsTrigger>
             </TabsList>
-            {scanned && (
-              <Badge variant="signal" className="gap-1">
-                <TrendingUp className="h-3 w-3" /> อัปเดตล่าสุดเมื่อครู่นี้
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              {isImported ? (
+                <Badge variant="success" className="gap-1 text-xs">
+                  <Database className="h-3 w-3" /> ข้อมูลของคุณ
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="gap-1 text-xs text-muted-foreground">
+                  <Database className="h-3 w-3" /> ข้อมูลตัวอย่าง
+                </Badge>
+              )}
+              {scanned && (
+                <Badge variant="signal" className="gap-1">
+                  <TrendingUp className="h-3 w-3" /> อัปเดตล่าสุดเมื่อครู่นี้
+                </Badge>
+              )}
+            </div>
           </div>
 
           <TabsContent value="products">
@@ -152,7 +188,7 @@ export default function OverviewPage() {
             />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
+                <ProductCard key={p.id} product={p} index={i} onToggleSave={toggleSaveProduct} />
               ))}
             </div>
           </TabsContent>

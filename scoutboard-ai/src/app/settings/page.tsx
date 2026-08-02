@@ -10,11 +10,76 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getApiKeys, setApiKey, removeApiKey, AIProvider } from "@/lib/crypto-store";
 
 export default function SettingsPage() {
-  const [provider, setProvider] = React.useState("Gemini");
-  const [apiKey, setApiKey] = React.useState("");
+  const [provider, setProvider] = React.useState<AIProvider>("gemini");
+  const [apiKeys, setApiKeys] = React.useState<Record<string, string>>({});
+  const [inputValue, setInputValue] = React.useState("");
+  const [hasUserTyped, setHasUserTyped] = React.useState(false);
   const [model, setModel] = React.useState("gemini-2.0-flash");
+
+  // Load keys on mount
+  React.useEffect(() => {
+    getApiKeys().then((keys) => {
+      setApiKeys(keys);
+    });
+  }, []);
+
+  // Update input value when provider changes
+  React.useEffect(() => {
+    setHasUserTyped(false);
+    const key = apiKeys[provider];
+    if (key) {
+      // Show first 4 characters of the real key, then mask the rest
+      const prefix = key.substring(0, 4);
+      setInputValue(`${prefix}••••••••••••••••`);
+    } else {
+      setInputValue("");
+    }
+  }, [provider, apiKeys]);
+
+  const handleSave = async () => {
+    if (!inputValue.includes("••••")) {
+      if (inputValue.trim() === "") {
+        if (hasUserTyped) {
+          await removeApiKey(provider);
+          setApiKeys((prev) => {
+            const next = { ...prev };
+            delete next[provider];
+            return next;
+          });
+          toast("ลบ API Key แล้ว", { description: provider });
+        } else {
+          // User just focused (cleared by onFocus) and clicked Save without typing.
+          // Restore the mask and skip to prevent data loss.
+          const key = apiKeys[provider];
+          if (key) {
+            const prefix = key.substring(0, 4);
+            setInputValue(`${prefix}••••••••••••••••`);
+          }
+          toast.info("ไม่ได้เปลี่ยนแปลง API Key");
+        }
+      } else {
+        await setApiKey(provider, inputValue.trim());
+        setApiKeys((prev) => ({ ...prev, [provider]: inputValue.trim() }));
+        toast.success("บันทึก API Key สำเร็จ", { description: provider });
+      }
+    } else {
+      toast.info("ไม่ได้เปลี่ยนแปลง API Key");
+    }
+  };
+
+  const handleReset = async () => {
+    await removeApiKey(provider);
+    setApiKeys((prev) => {
+      const next = { ...prev };
+      delete next[provider];
+      return next;
+    });
+    setInputValue("");
+    toast("รีเซ็ตค่า AI แล้ว", { description: `ลบ Key ของ ${provider} แล้ว` });
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -90,17 +155,22 @@ export default function SettingsPage() {
             <CardContent className="space-y-5">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {[
-                  { name: "Gemini", hint: "เหมาะกับสรุป insight เร็ว" },
-                  { name: "OpenAI", hint: "เหมาะกับการร่างข้อความขาย" },
-                  { name: "Claude", hint: "เหมาะกับการวิเคราะห์ยาว" },
+                  { id: "gemini" as AIProvider, name: "Gemini", hint: "เหมาะกับสรุป insight เร็ว" },
+                  { id: "openai" as AIProvider, name: "OpenAI", hint: "เหมาะกับการร่างข้อความขาย" },
+                  { id: "claude" as AIProvider, name: "Claude", hint: "เหมาะกับการวิเคราะห์ยาว" },
                 ].map((item) => (
                   <button
-                    key={item.name}
+                    key={item.id}
                     type="button"
-                    onClick={() => setProvider(item.name)}
-                    className={`rounded-2xl border p-4 text-left transition ${provider === item.name ? "border-primary bg-primary/5" : "hover:border-muted-foreground/40"}`}
+                    onClick={() => setProvider(item.id)}
+                    className={`rounded-2xl border p-4 text-left transition ${provider === item.id ? "border-primary bg-primary/5" : "hover:border-muted-foreground/40"}`}
                   >
-                    <p className="text-sm font-semibold">{item.name}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold">{item.name}</p>
+                      {apiKeys[item.id] && (
+                        <div className="h-2 w-2 rounded-full bg-success"></div>
+                      )}
+                    </div>
                     <p className="mt-1 text-xs text-muted-foreground">{item.hint}</p>
                   </button>
                 ))}
@@ -109,7 +179,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>ผู้ให้บริการ</Label>
-                  <Input value={provider} onChange={(e) => setProvider(e.target.value)} />
+                  <Input value={provider.charAt(0).toUpperCase() + provider.slice(1)} disabled />
                 </div>
                 <div className="space-y-2">
                   <Label>โมเดล</Label>
@@ -118,20 +188,41 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>API key</Label>
-                <Input value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="วาง key ของคุณที่นี่" type="password" />
+                <div className="flex items-center justify-between">
+                  <Label>API Key</Label>
+                  {apiKeys[provider] ? (
+                    <span className="text-[10px] font-medium text-success">บันทึกไว้แล้ว</span>
+                  ) : (
+                    <span className="text-[10px] font-medium text-muted-foreground">ยังไม่ได้ตั้งค่า</span>
+                  )}
+                </div>
+                <Input 
+                  value={inputValue} 
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                    setHasUserTyped(true);
+                  }}
+                  onFocus={() => {
+                    if (inputValue.includes("••••")) {
+                      setInputValue("");
+                    }
+                  }}
+                  placeholder="วาง key ของคุณที่นี่" 
+                  type="text" 
+                />
               </div>
 
-              <div className="rounded-2xl border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground">
-                ระบบนี้ไม่เก็บ key ลงในโน้ต, Git หรือไฟล์ส่งมอบ การบันทึกค่าเป็นแค่ local settings ของผู้ใช้เท่านั้น
+              <div className="rounded-2xl border border-dashed border-primary/20 bg-primary/5 p-4 text-xs leading-relaxed text-primary/80">
+                <strong>ข้อมูลความปลอดภัย:</strong> เพื่อความสะดวก คีย์ของคุณจะถูกเข้ารหัสระดับพื้นฐาน (Obfuscation) 
+                และเก็บไว้ในเบราว์เซอร์นี้ (ไม่ส่งไปเซิร์ฟเวอร์ส่วนกลาง) โปรดระมัดระวังหากใช้งานบนเครื่องสาธารณะ
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => toast("รีเซ็ตค่า AI แล้ว", { description: "ล้าง provider/model/key ชั่วคราว" })}>
+                <Button variant="outline" onClick={handleReset}>
                   รีเซ็ต
                 </Button>
-                <Button onClick={() => toast.success("บันทึก AI API แล้ว", { description: `${provider} · ${model}` })}>
-                  บันทึก AI API
+                <Button onClick={handleSave}>
+                  บันทึก API Key
                 </Button>
               </div>
             </CardContent>

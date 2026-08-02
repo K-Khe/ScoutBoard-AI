@@ -41,8 +41,16 @@ const scoreVariant: Record<Product["score"], "signal" | "secondary" | "outline">
   ต่ำ: "outline",
 };
 
-export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
-  const [saved, setSaved] = React.useState(!!product.saved);
+export function ProductCard({
+  product,
+  index = 0,
+  onToggleSave,
+}: {
+  product: Product;
+  index?: number;
+  onToggleSave?: (id: string) => void;
+}) {
+  const saved = !!product.saved;
   const rating = product.rating ?? 4.6;
   const trendLatest = product.trend[product.trend.length - 1] ?? product.velocity;
 
@@ -89,8 +97,8 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               size="icon"
               className="h-8 w-8 shrink-0"
               onClick={() => {
-                setSaved((s) => !s);
-                toast(saved ? "นำออกจากรายการบันทึกแล้ว" : "บันทึกสินค้าแล้ว", {
+                onToggleSave?.(product.id);
+                toast(!saved ? "บันทึกสินค้าแล้ว" : "นำออกจากรายการบันทึกแล้ว", {
                   description: product.name,
                 });
               }}

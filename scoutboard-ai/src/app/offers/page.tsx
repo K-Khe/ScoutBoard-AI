@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Database } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,11 +26,24 @@ export default function OffersPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight md:text-3xl">สร้างข้อเสนอสินค้า</h1>
-          <p className="mt-1 text-sm text-muted-foreground">จัดการข้อเสนอส่วนลดและคอมมิชชั่นสำหรับสินค้าที่คัดเลือกไว้</p>
+      <div className="rounded-2xl border bg-gradient-to-r from-slate-950 to-slate-800 p-5 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight md:text-3xl">สร้างข้อเสนอสินค้า</h1>
+            <p className="mt-1 max-w-2xl text-sm text-white/75">จัดการข้อเสนอส่วนลดและคอมมิชชั่นสำหรับสินค้าที่คัดเลือกไว้</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="gap-1.5 border-white/20 text-xs text-white/60">
+              <Database className="h-3 w-3" /> ข้อมูลตัวอย่าง
+            </Badge>
+            <Button variant="secondary" size="sm" disabled className="opacity-50">
+              อัปโหลดเงื่อนไขข้อเสนอ (เร็วๆ นี้)
+            </Button>
+          </div>
         </div>
+      </div>
+
+      <div className="flex justify-end">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm">

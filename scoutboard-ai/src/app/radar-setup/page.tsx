@@ -2,6 +2,8 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Database } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -11,9 +13,16 @@ import { Separator } from "@/components/ui/separator";
 export default function RadarSetupPage() {
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight md:text-3xl">ตั้งค่าเรดาร์</h1>
-        <p className="mt-1 text-sm text-muted-foreground">กำหนดเงื่อนไขที่เรดาร์ใช้ในการค้นหาสินค้าที่มีแนวโน้มดี</p>
+      <div className="rounded-2xl border bg-gradient-to-r from-slate-950 to-slate-800 p-5 text-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight md:text-3xl">ตั้งค่าเรดาร์</h1>
+            <p className="mt-1 max-w-2xl text-sm text-white/75">กำหนดเงื่อนไขที่เรดาร์ใช้ในการค้นหาสินค้าที่มีแนวโน้มดี</p>
+          </div>
+          <Badge variant="success" className="gap-1.5 text-xs">
+            <Database className="h-3 w-3" /> ตั้งค่าถูกบันทึกในเบราว์เซอร์
+          </Badge>
+        </div>
       </div>
 
       <Card className="max-w-2xl">
